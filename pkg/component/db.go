@@ -60,3 +60,7 @@ func (d *DB) Start(ctx context.Context) error {
 func (d *DB) CloseHandle() {
 
 }
+
+func DefaultDB() *gorm.DB {
+	return db
+}
