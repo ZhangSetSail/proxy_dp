@@ -7,6 +7,7 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
+	"path"
 	"rbd_proxy_dp/config"
 	"rbd_proxy_dp/model"
 )
@@ -37,7 +38,7 @@ func (d *DB) Start(ctx context.Context) error {
 			return fmt.Errorf("mysql connection error: %w", err)
 		}
 	case "sqlite":
-		db, err = gorm.Open(sqlite.Open(dbConfig.DBName), &gorm.Config{})
+		db, err = gorm.Open(sqlite.Open(path.Join("/app", dbConfig.DBName)), &gorm.Config{})
 		if err != nil {
 			logrus.Errorf("failed to connect to sqlite: %v", err)
 			return fmt.Errorf("sqlite connection error: %w", err)
