@@ -38,7 +38,7 @@ func (d *DB) Start(ctx context.Context) error {
 			return fmt.Errorf("mysql connection error: %w", err)
 		}
 	case "sqlite":
-		db, err = gorm.Open(sqlite.Open(path.Join("/app", dbConfig.DBName)), &gorm.Config{})
+		db, err = gorm.Open(sqlite.Open(path.Join("/app/data", dbConfig.DBName)), &gorm.Config{})
 		if err != nil {
 			logrus.Errorf("failed to connect to sqlite: %v", err)
 			return fmt.Errorf("sqlite connection error: %w", err)
