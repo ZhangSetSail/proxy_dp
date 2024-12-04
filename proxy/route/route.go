@@ -7,5 +7,6 @@ import (
 
 func RegisterRoute(mux *http.ServeMux) {
 	// 未匹配路径走代理
+	mux.HandleFunc("/proxy_domain", handle.ProxyDomain)
 	mux.HandleFunc("/", handle.ProxyRouteHandle)
 }
