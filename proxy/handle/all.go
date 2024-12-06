@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"net/url"
+	"os"
 	"rbd_proxy_dp/config"
 	"rbd_proxy_dp/model"
 	"rbd_proxy_dp/pkg/component"
@@ -22,6 +23,23 @@ func ProxyDomain(w http.ResponseWriter, r *http.Request) {
 
 	// 返回 proxyTarget 作为 JSON 格式的响应
 	response := map[string]string{"proxy_target": proxyTarget}
+
+	// 将响应写入
+	if err := json.NewEncoder(w).Encode(response); err != nil {
+		http.Error(w, "Failed to encode response", http.StatusInternalServerError)
+		return
+	}
+}
+
+func VMProxyDomain(w http.ResponseWriter, r *http.Request) {
+	// 从环境变量中获取 VM_PROXY_DOMAIN 的值
+	proxyTarget := os.Getenv("VM_PROXY_DOMAIN")
+
+	// 设置响应头 Content-Type 为 application/json
+	w.Header().Set("Content-Type", "application/json")
+
+	// 返回 proxyTarget 作为 JSON 格式的响应
+	response := map[string]string{"vm_proxy_target": proxyTarget}
 
 	// 将响应写入
 	if err := json.NewEncoder(w).Encode(response); err != nil {
