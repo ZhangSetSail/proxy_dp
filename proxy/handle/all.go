@@ -3,6 +3,7 @@ package handle
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 	"io"
@@ -15,6 +16,37 @@ import (
 	"rbd_proxy_dp/pkg/component"
 	"time"
 )
+
+func ProxyTest(w http.ResponseWriter, r *http.Request) {
+	// 打印所有请求头
+	for name, values := range r.Header {
+		for _, value := range values {
+			fmt.Printf("%s: %s\n", name, value)
+		}
+	}
+
+	// 检查请求是否包含 Authorization 头
+	authHeader := r.Header.Get("Authorization")
+	if authHeader == "" {
+		http.Error(w, "Authorization header missing", http.StatusForbidden)
+		return
+	}
+
+	// 如果包含 Authorization 头，继续处理请求
+	proxyTarget := config.DefaultProxy().ProxyTarget
+
+	// 设置响应头 Content-Type 为 application/json
+	w.Header().Set("Content-Type", "application/json")
+
+	// 返回 proxyTarget 作为 JSON 格式的响应
+	response := map[string]string{"proxy_target": proxyTarget}
+
+	// 将响应写入
+	if err := json.NewEncoder(w).Encode(response); err != nil {
+		http.Error(w, "Failed to encode response", http.StatusInternalServerError)
+		return
+	}
+}
 
 func ProxyDomain(w http.ResponseWriter, r *http.Request) {
 	proxyTarget := config.DefaultProxy().ProxyTarget
