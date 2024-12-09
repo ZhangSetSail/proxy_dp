@@ -3,7 +3,6 @@ package handle
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 	"io"
@@ -21,7 +20,7 @@ func ProxyTest(w http.ResponseWriter, r *http.Request) {
 	// 打印所有请求头
 	for name, values := range r.Header {
 		for _, value := range values {
-			fmt.Printf("%s: %s\n", name, value)
+			logrus.Infof("%s: %s\n", name, value)
 		}
 	}
 
